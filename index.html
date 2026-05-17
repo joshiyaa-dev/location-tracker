@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-time GPS Location Tracker</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <h1>Real-time GPS Location Tracker</h1>
+      <p class="subtitle">Track live coordinates, accuracy radius, speed, and location history.</p>
+
+      <section class="controls">
+        <button id="startTracking" type="button">Start Tracking</button>
+        <button id="stopTracking" type="button" disabled>Stop Tracking</button>
+      </section>
+
+      <section class="status" aria-live="polite">
+        <p><strong>Status:</strong> <span id="statusText">Idle</span></p>
+        <p><strong>Latitude:</strong> <span id="latitude">—</span></p>
+        <p><strong>Longitude:</strong> <span id="longitude">—</span></p>
+        <p><strong>Accuracy Radius:</strong> <span id="accuracy">—</span></p>
+        <p><strong>Speed:</strong> <span id="speed">—</span></p>
+        <p><strong>Last Updated:</strong> <span id="updatedAt">—</span></p>
+        <p>
+          <strong>Share Current Location:</strong>
+          <a id="shareLink" href="#" target="_blank" rel="noopener noreferrer">Unavailable</a>
+        </p>
+      </section>
+
+      <section class="history">
+        <h2>Location History Trail</h2>
+        <ol id="historyList"></ol>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
