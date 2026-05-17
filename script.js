@@ -21,7 +21,10 @@ function formatNumber(value, digits = 6) {
 }
 
 function calculateSpeedMetersPerSecond(currentPosition) {
-  if (Number.isFinite(currentPosition.coords.speed)) {
+  if (
+    Number.isFinite(currentPosition.coords.speed) &&
+    currentPosition.coords.speed >= 0
+  ) {
     return currentPosition.coords.speed;
   }
 
@@ -90,8 +93,11 @@ function appendHistoryPoint(position, speedMps) {
   li.appendChild(document.createTextNode(')'));
   historyList.prepend(li);
 
-  if (historyTrail.length > MAX_HISTORY_POINTS) {
-    historyTrail.length = MAX_HISTORY_POINTS;
+  while (historyTrail.length > MAX_HISTORY_POINTS) {
+    historyTrail.pop();
+  }
+
+  while (historyList.childElementCount > MAX_HISTORY_POINTS) {
     if (historyList.lastElementChild) {
       historyList.removeChild(historyList.lastElementChild);
     }
