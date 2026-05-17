@@ -1,5 +1,7 @@
 const MAX_HISTORY_POINTS = 20;
 const EARTH_RADIUS_METERS = 6371000;
+const MIN_TIME_DELTA_SECONDS = 0.1;
+const GEOLOCATION_TIMEOUT_MS = 15000;
 
 const startButton = document.getElementById('startTracking');
 const stopButton = document.getElementById('stopTracking');
@@ -35,7 +37,7 @@ function calculateSpeedMetersPerSecond(currentPosition) {
   const timeDeltaSeconds =
     (currentPosition.timestamp - lastPosition.timestamp) / 1000;
 
-  if (timeDeltaSeconds <= 0.1) {
+  if (timeDeltaSeconds <= MIN_TIME_DELTA_SECONDS) {
     return null;
   }
 
@@ -141,7 +143,7 @@ function startTracking() {
   watchId = navigator.geolocation.watchPosition(onLocationSuccess, onLocationError, {
     enableHighAccuracy: true,
     maximumAge: 0,
-    timeout: 15000,
+    timeout: GEOLOCATION_TIMEOUT_MS,
   });
 
   startButton.disabled = true;
