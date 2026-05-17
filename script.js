@@ -2,6 +2,7 @@ const MAX_HISTORY_POINTS = 20;
 const EARTH_RADIUS_METERS = 6371000;
 const MIN_TIME_DELTA_SECONDS = 0.1;
 const GEOLOCATION_TIMEOUT_MS = 15000;
+const toRadians = (degrees) => (degrees * Math.PI) / 180;
 
 const startButton = document.getElementById('startTracking');
 const stopButton = document.getElementById('stopTracking');
@@ -41,8 +42,6 @@ function calculateSpeedMetersPerSecond(currentPosition) {
     return null;
   }
 
-  const toRadians = (degrees) => (degrees * Math.PI) / 180;
-
   const lat1 = toRadians(lastPosition.coords.latitude);
   const lat2 = toRadians(currentPosition.coords.latitude);
   const deltaLat = lat2 - lat1;
@@ -59,7 +58,9 @@ function calculateSpeedMetersPerSecond(currentPosition) {
 }
 
 function updateShareLink(latitude, longitude) {
-  const mapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+  const mapsUrl =
+    `https://www.google.com/maps?q=${encodeURIComponent(latitude)},` +
+    `${encodeURIComponent(longitude)}`;
   shareLink.href = mapsUrl;
   shareLink.textContent = mapsUrl;
 }
@@ -75,7 +76,9 @@ function appendHistoryPoint(position, speedMps) {
   historyTrail.unshift(point);
 
   const li = document.createElement('li');
-  const mapsUrl = `https://www.google.com/maps?q=${point.latitude},${point.longitude}`;
+  const mapsUrl =
+    `https://www.google.com/maps?q=${encodeURIComponent(point.latitude)},` +
+    `${encodeURIComponent(point.longitude)}`;
   const speedText = Number.isFinite(point.speedMps)
     ? `${point.speedMps.toFixed(2)} m/s (${(point.speedMps * 3.6).toFixed(2)} km/h)`
     : 'Unavailable';
@@ -100,9 +103,7 @@ function appendHistoryPoint(position, speedMps) {
   }
 
   while (historyList.childElementCount > MAX_HISTORY_POINTS) {
-    if (historyList.lastElementChild) {
-      historyList.removeChild(historyList.lastElementChild);
-    }
+    historyList.lastElementChild?.remove();
   }
 }
 
