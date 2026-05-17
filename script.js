@@ -1,4 +1,5 @@
 const MAX_HISTORY_POINTS = 20;
+const EARTH_RADIUS_METERS = 6371000;
 
 const startButton = document.getElementById('startTracking');
 const stopButton = document.getElementById('stopTracking');
@@ -35,7 +36,6 @@ function calculateSpeedMetersPerSecond(currentPosition) {
     return null;
   }
 
-  const earthRadius = 6371000;
   const toRadians = (degrees) => (degrees * Math.PI) / 180;
 
   const lat1 = toRadians(lastPosition.coords.latitude);
@@ -48,7 +48,7 @@ function calculateSpeedMetersPerSecond(currentPosition) {
     Math.sin(deltaLat / 2) ** 2 +
     Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLon / 2) ** 2;
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distanceMeters = earthRadius * c;
+  const distanceMeters = EARTH_RADIUS_METERS * c;
 
   return distanceMeters / timeDeltaSeconds;
 }
