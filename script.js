@@ -32,7 +32,7 @@ function calculateSpeedMetersPerSecond(currentPosition) {
   const timeDeltaSeconds =
     (currentPosition.timestamp - lastPosition.timestamp) / 1000;
 
-  if (timeDeltaSeconds <= 0) {
+  if (timeDeltaSeconds <= 0.1) {
     return null;
   }
 
@@ -60,41 +60,42 @@ function updateShareLink(latitude, longitude) {
 }
 
 function appendHistoryPoint(position, speedMps) {
-  historyTrail.unshift({
+  const point = {
     latitude: position.coords.latitude,
     longitude: position.coords.longitude,
     accuracy: position.coords.accuracy,
     speedMps,
     timestamp: position.timestamp,
-  });
+  };
+  historyTrail.unshift(point);
+
+  const li = document.createElement('li');
+  const mapsUrl = `https://www.google.com/maps?q=${point.latitude},${point.longitude}`;
+  const speedText = Number.isFinite(point.speedMps)
+    ? `${point.speedMps.toFixed(2)} m/s (${(point.speedMps * 3.6).toFixed(2)} km/h)`
+    : 'Unavailable';
+  const details = document.createTextNode(
+    `${new Date(point.timestamp).toLocaleTimeString()} — ` +
+      `Lat: ${point.latitude.toFixed(6)}, Lng: ${point.longitude.toFixed(6)}, ` +
+      `Accuracy: ±${point.accuracy.toFixed(1)} m, Speed: ${speedText} (`
+  );
+  const mapLink = document.createElement('a');
+  mapLink.href = mapsUrl;
+  mapLink.target = '_blank';
+  mapLink.rel = 'noopener noreferrer';
+  mapLink.textContent = 'Open in Google Maps';
+
+  li.appendChild(details);
+  li.appendChild(mapLink);
+  li.appendChild(document.createTextNode(')'));
+  historyList.prepend(li);
 
   if (historyTrail.length > MAX_HISTORY_POINTS) {
     historyTrail.length = MAX_HISTORY_POINTS;
+    if (historyList.lastElementChild) {
+      historyList.removeChild(historyList.lastElementChild);
+    }
   }
-
-  historyList.innerHTML = '';
-  historyTrail.forEach((point) => {
-    const li = document.createElement('li');
-    const mapsUrl = `https://www.google.com/maps?q=${point.latitude},${point.longitude}`;
-    const speedText = Number.isFinite(point.speedMps)
-      ? `${point.speedMps.toFixed(2)} m/s (${(point.speedMps * 3.6).toFixed(2)} km/h)`
-      : 'Unavailable';
-    const details = document.createTextNode(
-      `${new Date(point.timestamp).toLocaleTimeString()} — ` +
-        `Lat: ${point.latitude.toFixed(6)}, Lng: ${point.longitude.toFixed(6)}, ` +
-        `Accuracy: ±${point.accuracy.toFixed(1)} m, Speed: ${speedText} (`
-    );
-    const mapLink = document.createElement('a');
-    mapLink.href = mapsUrl;
-    mapLink.target = '_blank';
-    mapLink.rel = 'noopener noreferrer';
-    mapLink.textContent = 'Open in Google Maps';
-
-    li.appendChild(details);
-    li.appendChild(mapLink);
-    li.appendChild(document.createTextNode(')'));
-    historyList.appendChild(li);
-  });
 }
 
 function onLocationSuccess(position) {
