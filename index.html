@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PathPulse — Real-Time Location Tracker</title>
+  <meta name="description" content="Live GPS tracking with trail, stats and GPX export. Zero APIs, zero accounts — runs fully in your browser." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📍</text></svg>" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>📍 PathPulse</h1>
+    <div class="pills">
+      <span class="pill" id="pill-status">● idle</span>
+      <span class="pill" id="pill-acc">± — m</span>
+      <span class="pill" id="pill-speed">0.0 km/h</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="map-wrap">
+      <canvas id="map"></canvas>
+      <div class="map-hint" id="map-hint">Grid = ~50 m per cell (auto-scales to your zoom)</div>
+    </div>
+
+    <section class="stats">
+      <div class="stat"><b id="st-lat">—</b><span>latitude</span></div>
+      <div class="stat"><b id="st-lng">—</b><span>longitude</span></div>
+      <div class="stat"><b id="st-alt">—</b><span>altitude m</span></div>
+      <div class="stat"><b id="st-dist">0 m</b><span>distance</span></div>
+      <div class="stat"><b id="st-points">0</b><span>track points</span></div>
+      <div class="stat"><b id="st-time">00:00</b><span>elapsed</span></div>
+    </section>
+
+    <section class="controls">
+      <button id="btn-start" class="primary">▶ Start tracking</button>
+      <button id="btn-center" disabled>◎ Center</button>
+      <button id="btn-share" disabled>🔗 Share pin</button>
+      <button id="btn-gpx" disabled>⬇ GPX</button>
+      <button id="btn-clear" class="danger" disabled>🗑 Clear</button>
+    </section>
+
+    <p class="note" id="note">
+      Uses the browser Geolocation API only. Your position never leaves this
+      device — there is no server, no account, no map API key.
+    </p>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
